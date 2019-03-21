@@ -89,11 +89,15 @@ class _ViewPageState extends State<ViewPage> {
                   for(var j = 0; j < entries[0].word.length; j++) {
                     textSelected[i + j] = true;
                   }
+                } else if (widget.content[i].trim().isNotEmpty) {
+                  textSelected[i] = true;
                 }
               });
 
               if(entries.length > 0) {
                 _showDictModal(entries);
+              } else {
+                Timer(Duration(milliseconds: 300), () => _clearSelectedText());
               }
             });
           },
