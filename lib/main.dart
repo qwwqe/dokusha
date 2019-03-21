@@ -89,11 +89,12 @@ class _ViewPageState extends State<ViewPage> {
                   for(var j = 0; j < entries[0].word.length; j++) {
                     textSelected[i + j] = true;
                   }
-                } else {
-                  textSelected[i] = true;
                 }
               });
-              _showDictModal(entries);
+
+              if(entries.length > 0) {
+                _showDictModal(entries);
+              }
             });
           },
       ));
@@ -146,13 +147,19 @@ class _ViewPageState extends State<ViewPage> {
     var hasStarting = await widget.jmdict.hasEntryStartingWith(widget.content[offset]);
     for(var i = offset + 1; i < widget.content.length && hasStarting; i++) {
       var word = widget.content.substring(offset, i);
+      debugPrint("Searching for prefix: $word.");
       if (await widget.jmdict.hasEntry(word)) {
         lastBound = i;
+        debugPrint("Full word found.");
       }
       hasStarting = await widget.jmdict.hasEntryStartingWith(word);
+      if(hasStarting) {
+        debugPrint("Prefix found.");
+      }
     }
     stopwatch.stop();
     debugPrint("Search took ${stopwatch.elapsed}.");
+    debugPrint("${lastBound - offset}");
 
     // String found in forward search
     if(lastBound > offset) {
